@@ -1,0 +1,154 @@
+// Program to perform bubble sort on a linked list
+
+#include <stdlib.h>
+#include <stdio.h>
+
+struct node
+{
+	int data ;
+	struct node * next ;
+} ;
+
+struct node * create_ll( ) ;
+void interchange( struct node ** , struct node * , struct node * , struct node * ) ;
+void insert_end( struct node ** , int ) ;
+void bubble_sort( struct node ** ) ;
+void show_ll( struct node * ) ; 
+
+int main()
+{
+
+	struct node * link_list = create_ll() ;
+	bubble_sort( &link_list ) ;
+	printf("List after sorting - \n\n") ;
+	show_ll( link_list ) ;
+	
+}		
+
+void insert_end( struct node ** start , int val )
+{
+
+	struct node * newnode , * ptr ; 
+	ptr = *start ; 
+
+	newnode = ( struct node * ) malloc( sizeof( struct node ) ) ;
+	newnode->data = val ;
+	newnode->next = NULL ;
+
+	if( ptr!= NULL )
+	{
+		while( ptr->next != NULL )
+			ptr = ptr->next ;
+		
+		ptr->next = newnode ;
+
+	}
+	else 
+		*start = newnode ;
+
+} 
+
+struct node * create_ll( ) 
+{
+	struct node * start = NULL ;
+
+	printf("Enter elements of list\nPress 0 to stop !\n") ;
+	int val ;
+	scanf( "%d" , &val ) ;
+	while( val != 0 )
+	{ 	
+		insert_end( &start , val ) ;
+		scanf( "%d" , &val ) ;
+	}
+
+	return start ;
+
+}	
+
+void interchange( struct node ** start , struct node * prev , struct node * node1 , struct node * node2 )
+{
+
+	if( *start == node1 )
+	{
+		node1->next = node2->next ;
+		node2->next = node1 ;	
+		*start = node2 ;	
+	}
+	else 
+	{
+		while( prev->next != node1 )
+			prev = prev->next ;
+
+		prev->next = node2 ;
+		node1->next = node2->next ;
+		node2->next = node1 ;
+	}
+	
+}	 
+
+void bubble_sort( struct node ** start ) 
+{
+	if( *start == NULL )
+		return ;
+
+	int len = 1 ;
+	int flag = 1 ;
+	struct node * ptr , * after , * prev ; 
+	ptr = *start ;
+	
+	while( ptr->next != NULL )
+	{
+		ptr = ptr->next ;
+		len++ ;
+	}
+	
+	for( int i = 0 ; i < len ; i++ )
+	{
+		
+		flag = 1 ;
+		ptr = *start ;
+		prev = *start ;
+		after = (*start)->next ;
+		for( int j = len - i - 1 ; j > 0 ; j-- )
+		{
+			if( ptr->data > after->data )
+			{
+				interchange( start , prev , ptr , after ) ;
+				prev = after ; 
+				after = ptr->next ;
+				flag = 0 ;
+			}
+			else
+			{	
+				prev = ptr ;
+				ptr = after ;
+				after= after->next ;
+			}
+			show_ll( *start ) ;
+			printf("\n") ;
+		}
+		
+		if( flag == 1 )
+			break ;
+
+	}
+
+			
+}
+	
+void show_ll( struct node * start ) 
+{
+	if( start == NULL)
+		return ;	
+
+
+	while( start->next != NULL )
+	{
+		printf( "%d -> " , start->data ) ;
+		start = start->next ;
+	}
+	printf( "%d\n" , start -> data ) ; 
+} 
+	
+	 
+	 
